@@ -1,0 +1,8 @@
+"_id","_label","_type","code","icao","desc","region","runways","longest","elev","country","city","lat","lon"
+3659,continent,continent,EU,,Europe,,,,,,,,
+3660,continent,continent,AF,,Africa,,,,,,,,
+3661,continent,continent,NA,,North America,,,,,,,,
+3662,continent,continent,SA,,South America,,,,,,,,
+3663,continent,continent,AS,,Asia,,,,,,,,
+3664,continent,continent,OC,,Oceania,,,,,,,,
+3665,continent,continent,AN,,Antarctica,,,,,,,,

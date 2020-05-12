@@ -82,8 +82,9 @@ def format_keys(keys_dict):
 
 
 def choice_columns(keys_dict):
-  formated_keys = format_keys(keys_dict)
-  input_string = input("\nselect columns with including: %s\n>> "%(formated_keys))
+  #formated_keys = format_keys(keys_dict)
+  keys_list = list( map(lambda x: '%s(%d)'%(x[0], x[1]), keys_dict.items()) )
+  input_string = input("\nselect columns with including: %s\n>> "%(', '.join(keys_list)))
   if( input_string == '' ): columns = keys_dict.keys()
   else: columns = list( map(lambda x: x.strip(), input_string.split(',')) )
   print("selected columns are ", columns)
@@ -102,6 +103,15 @@ def read_csv(args):
   return stripped_rows, columns
 
 
+def sort_rows(rows, columns):
+  input_string = input("\nselect column for sorting: %s\n>> "%(', '.join(columns)))
+  if( input_string != '' ):
+    sorter = lambda x: (x[input_string])
+    sorted_rows = sorted(rows, key=sorter)
+  else:
+    sorted_rows = rows
+  return sorted_rows
+
 def write_csv(filename, rows, columns):
   size = 0
   with open(filename, 'wt') as f:
@@ -118,5 +128,8 @@ def write_csv(filename, rows, columns):
 if __name__ == "__main__":
   args = main()
   rows, columns = read_csv(args)
-  size = write_csv(args.output_filename, rows, columns)
+  sorted_rows = sort_rows(rows, columns)
+  size = write_csv(args.output_filename, sorted_rows, columns)
+
+  print('')
   print('output: %s, size=%d'%(args.output_filename, size))
