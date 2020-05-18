@@ -47,6 +47,7 @@ def loadDataByColumns(fn, selected):              ## source = { filename, column
         rows = []
         for row in reader:
             rows.append( [row[x] for x in selected] )       ## Caution: 함부로 () 튜플 기호 쓰지마라!! ==> generator 가 된다
+            ## 참고 https://mingrammer.com/introduce-comprehension-of-python/#list-comprehension-lc
     return rows
 
 def checkRelationsColumn(relations, idx, targets):

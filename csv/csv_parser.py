@@ -4,6 +4,52 @@ import csv, itertools
 import os.path
 from collections import defaultdict
 
+from functools import cmp_to_key
+from operator import itemgetter, methodcaller
+
+## python-sort-list-object-dictionary-multiple-keys
+## https://gist.github.com/malero/418204#gistcomment-2266646
+
+def cmp(a, b):
+    try:
+        return (a > b) - (a < b)
+    except TypeError:
+        return -1
+
+def multikeysort(items, columns, functions={}, getter=itemgetter):
+    """Sort a list of dictionary objects or objects by multiple keys bidirectionally.
+
+    Keyword Arguments:
+    items -- A list of dictionary objects or objects
+    columns -- A list of column names to sort by. Use -column to sort in descending order
+    functions -- A Dictionary of Column Name -> Functions to normalize or process each column value
+    getter -- Default "getter" if column function does not exist
+              operator.itemgetter for Dictionaries
+              operator.attrgetter for Objects
+    """
+    comparers = []
+    for col in columns:
+        column = col[1:] if col.startswith('-') else col
+        if not column in functions:
+            functions[column] = getter(column)
+        comparers.append((functions[column], 1 if column == col else -1))
+
+    def comparer(left, right):
+        for func, polarity in comparers:
+            result = cmp(func(left), func(right))
+            if result:
+                return polarity * result
+        else:
+            return 0
+    return sorted(items, key=cmp_to_key(comparer))
+
+def compose(inner_func, *outer_funcs):
+     """Compose multiple unary functions together into a single unary function"""
+     if not outer_funcs:
+         return inner_func
+     outer_func = compose(*outer_funcs)
+     return lambda *args, **kwargs: outer_func(inner_func(*args, **kwargs))
+
 '''
 def main():
   parser = argparse.ArgumentParser()
@@ -102,12 +148,18 @@ def read_csv(args):
 
   return stripped_rows, columns
 
+def attr_sort(key):
+  return lambda x: (x[key])
 
 def sort_rows(rows, columns):
-  input_string = input("\nselect column for sorting: %s\n>> "%(', '.join(columns)))
+  input_string = input("\nselect column(s) for sorting: %s\n>> "%(', '.join(columns)))
   if( input_string != '' ):
-    sorter = lambda x: (x[input_string])
-    sorted_rows = sorted(rows, key=sorter)
+    cols = [ s.strip() for s in input_string.split(',') ]
+    if len(cols) == 1 :
+      sorter = lambda x: (x[ cols[0] ])         ## by multi keys ==> (x[k1], x[k2])
+      sorted_rows = sorted(rows, key=sorter)
+    else :
+      sorted_rows = multikeysort(rows, cols)    ## sort by multi keys
   else:
     sorted_rows = rows
   return sorted_rows
