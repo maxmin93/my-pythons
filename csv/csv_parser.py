@@ -67,11 +67,9 @@ def main():
   parser.add_argument('-i', dest="input_filename", type=str, required=True, help="input csv filename")
   parser.add_argument('-o', dest="output_filename", type=str, required=False, help="output csv filename")
   # parser.add_argument('-k', dest="key_col", type=int, help="key order for id")
-
   args = parser.parse_args()
   if not os.path.exists(args.input_filename):
       parser.error("The file %s does not exist!" % args.input_filename)
-
   print('** args:', args)
   return args
 
@@ -140,16 +138,11 @@ def choice_columns(keys_dict):
 def read_csv(args):
   if( not checkColumnSize(args.input_filename) ):
     raise ValueError("column sizes of rows are variable!")
-
   stripped_rows = stripRows(args.input_filename)
   keys_dict = getKeys(stripped_rows)
   #print(keys_dict)
   columns = choice_columns(keys_dict)
-
   return stripped_rows, columns
-
-def attr_sort(key):
-  return lambda x: (x[key])
 
 def sort_rows(rows, columns):
   input_string = input("\nselect column(s) for sorting: %s\n>> "%(', '.join(columns)))
