@@ -311,6 +311,11 @@ def test_find_k_largest_seq_quickselect():
     k = 3
     print(f"top {k} of {seq} -> {find_k_largest_seq_quickselect(seq[:],k)}")
 
+    # 중앙값(median) 출력을 위해서 numpy 를 사용함
+    import numpy
+    median_value = numpy.median(seq[:])
+    print(f"median of {sorted(seq)} -> {median_value}")
+
 ##################################
 
 if __name__ == "__main__":
