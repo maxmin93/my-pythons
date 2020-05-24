@@ -304,7 +304,7 @@ def exam09_09():
 '''
 
 class IceCreamMachine:
-    
+
     def __init__(self, ingredients, toppings):
         self.ingredients = ingredients
         self.toppings = toppings
@@ -336,7 +336,14 @@ def exam09_11():
 #############################
 
 ''' Pipeline
-    - function currying
+    - Function currying, Closures, Nested Functions, Decorators
+        https://www.protechtraining.com/content/python_fundamentals_tutorial-functional_programming
+        http://www.programmersought.com/article/2942491446/
+    - 참고: functools.partial
+        https://docs.python.org/3.7/library/functools.html#functools.partial
+
+    decorator 가 이런 식이다.
+    : 함수를 받아서 부가적인 처리를 하는 함수를 또 씌워서 함수를 리턴
 '''
 
 def pipeline(*funcs):

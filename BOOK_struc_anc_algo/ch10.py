@@ -326,6 +326,131 @@ def find_ancestor(path, low_value, high_value):
             return current_value
 
 ##########################################
+''' 두개의 리스트 비교
+    https://www.stechies.com/compare-lists-python-using-set-cmp-function/
+
+    - set 으로 변환해 '==' 또는 difference()        # 중복은 고려 안됨
+    - sort 후에 '==' 비교                           # 중복도 비교 가능
+    - difference 함수 구현 : 두 리스트를 합치고 if item not in list1 or item not in list2
+'''
+
+##########################################
+''' 정렬 How to
+    https://docs.python.org/ko/3.7/howto/sorting.html
+
+    -
+'''
+
+# class Student:
+#     def __init__(self, name, grade, age):
+#         self.name = name
+#         self.grade = grade
+#         self.age = age
+#     def __repr__(self):
+#         return repr((self.name, self.grade, self.age))
+
+from dataclasses import dataclass
+from operator import itemgetter, attrgetter
+
+'''
+    dataclass 는 dict 기반, namedtuple 은 tuple 기반
+    - dataclass 에서는 attrgetter 만 사용 가능
+    - namedtuple 에서는 attrgetter, itemgetter 둘다 사용 가능
+'''
+@dataclass
+class Student:
+    name:str
+    grade:str
+    age:int
+
+def test_sort_how_to():
+    student_objects = [
+        Student('john', 'A', 15),
+        Student('jane', 'B', 12),
+        Student('Joshep', 'C', 12),
+        Student('dave', 'B', 10),
+    ]
+
+    sorted1 = sorted(student_objects, key=lambda student: student.age)
+    print(f'sorted 1) {sorted1}')
+
+    '''
+    operator 모듈 함수는 다중 수준의 정렬을 허용합니다.
+    예를 들어, 먼저 grade로 정렬한 다음 age로 정렬하려면, 이렇게 합니다:
+    '''
+    sorted2 = sorted(student_objects, key=attrgetter('age', 'grade'))
+    print(f'sorted 2) {sorted2}')
+    sorted3 = sorted(student_objects, key=attrgetter('grade', 'age'), reverse=True)
+    print(f'sorted 3) {sorted3}')
+
+##########################################
+''' 연산자를 함수에 매핑하기
+    https://docs.python.org/ko/3.7/library/operator.html?highlight=itemgetter#mapping-operators-to-functions
+
+    - a == b        == eq(a, b)
+    - a != b        == ne(a, b)
+
+    - - a           == neg(a)
+    - not a         == not_(a)
+
+    - a ** b        == pow(a, b)
+    - a is b        == is_(a, b)
+    - obj[k] = v    == setitem(obj, k, v)
+    - obj[k]        == getitem(obj, k)
+    - del obj[k]    == delitem(obj, k)
+
+'''
+
+##########################################
+
+class Base(object):
+    def __init__(self):
+        print( "Base created")
+
+class ChildA(Base):
+    def __init__(self):
+        Base.__init__(self)
+
+class ChildB(Base):
+    def __init__(self):
+        #super(ChildB, self).__init__()      # super(<class>, self)
+        super().__init__()      # super(<class>, self)
+
+ChildA()
+ChildB()
+
+##########################################
+''' @classmethod와 @staticmethod 의 차이
+'''
+
+class Language:
+    default_language = "English"
+
+    def __init__(self):
+        self.show = '나의 언어는 ' + self.default_language
+
+    @classmethod
+    def class_my_language(cls):
+        return cls()
+
+    @staticmethod
+    def static_my_language():
+        return Language()
+
+    def print_language(self):
+        print(self.show)
+
+
+class KoreanLanguage(Language):
+    default_language = "한국어"
+
+def test_method_class_static():
+    a = KoreanLanguage.static_my_language()
+    b = KoreanLanguage.class_my_language()
+    a.print_language()      # English
+    b.print_language()      # 한국어
+
+##########################################
 
 if __name__ == "__main__":
     test_sequential_search()
@@ -340,5 +465,7 @@ if __name__ == "__main__":
     print("__________________________\n")
     test_intersection_two_array()
     print("__________________________\n")
+    test_sort_how_to()
     print("__________________________\n")
+    test_method_class_static()
     print("__________________________\n")
