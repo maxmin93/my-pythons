@@ -190,6 +190,85 @@ def ex03():
     print(f'intersection of sets: {result}')
 
 ########################################
+''' Brackets isBalanced
+    - Stack 이용
+    - open_brackets = [ '(', '{', '[' ]
+    - close_brackets = [ ')', '}', ']' ]
+'''
+
+def isBalanced1(input):
+    open_brackets = [ '(', '{', '[' ]
+    close_brackets = [ ')', '}', ']' ]
+
+    opens = deque()     # stack
+    closes = deque()    # queue
+    for s in input:                             # { [ ( ) ] }
+        if s in open_brackets:
+            opens.append(s)                     # stack : { [ (
+        elif s in close_brackets:
+            closes.appendleft(s)                 # queue : } ] )
+    print(f'ready: {input} -> {opens}, {closes}')
+
+    opens_cnt = len(opens)
+    matched_cnt = 0
+    while opens and closes:
+        open_bracket = opens.pop()
+        close_bracket = closes.pop()
+        if open_brackets.index(open_bracket) == close_brackets.index(close_bracket):
+            print(f'matched: {matched_cnt} -> {open_bracket},{close_bracket}')
+            matched_cnt += 1
+        else:
+            print(f'not matched: {matched_cnt} -> {open_bracket},{close_bracket}')
+        if open_bracket in close_brackets or close_bracket in open_brackets:
+            break
+
+    if opens_cnt == matched_cnt:
+        return True
+    else:
+        return False
+
+
+from collections import Counter
+
+def isBalanced2(input):
+    open_brackets = [ '(', '{', '[' ]
+    close_brackets = [ ')', '}', ']' ]
+
+    checked = []                # stack
+    stack = []                  # stack
+    for s in input:                             # { [ ( ) ] }
+        if s in open_brackets:
+            stack.append(s)                     # stack : { [ (
+        elif s in close_brackets:
+            last = stack[-1]
+            if open_brackets.index(last) == close_brackets.index(s):
+                checked.append( stack.pop() )
+                checked.append( s )
+
+    grpBy = Counter(checked)
+    print(f'stack={stack}, checked={grpBy}')
+    if len(stack) > 0:
+        return False
+    else:
+        return True
+
+def test_is_balanced():
+    test1 = '{[()]}'            # True
+    print(f'test"{test1}" => {isBalanced1(test1)}')
+    test2 = '{[(])}'            # False
+    print(f'test"{test2}" => {isBalanced1(test2)}')
+    test3 = '{{[[(())]]}}'      # True
+    print(f'test"{test3}" => {isBalanced1(test3)}')
+    test4 = '{[()]}()[]{}'      # True
+    print(f'test"{test1}" => {isBalanced1(test4)}')
+
+    print('\n------------------------\n')
+    # isBalanced2 is better
+    print(f'test "{test1}" => {isBalanced2(test1)}')
+    print(f'test "{test2}" => {isBalanced2(test2)}')
+    print(f'test "{test3}" => {isBalanced2(test3)}')
+    print(f'test "{test1}" => {isBalanced2(test4)}')
+
 ########################################
 ########################################
 ########################################
@@ -204,6 +283,7 @@ if __name__ == '__main__':
     print('___________________\n')
     ex03()
     print('___________________\n')
+    test_is_balanced()
     print('___________________\n')
     # print('___________________\n')
     # print('___________________\n')
